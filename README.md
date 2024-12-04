@@ -31,10 +31,14 @@ Features
 -   Supports comments using #
 -   Includes custom implementations of several C standard library functions.
 -   Reads and executes commands from files
--   Handles Ctrl-D, Ctrl-C (SIGINT) and Ctrl-Z (SIGTSTP) signals
+-   Handles Ctrl-C (SIGINT) and Ctrl-Z (SIGTSTP) signals
 -   Saves command history to a file
 -   Prints prompts and errors to stderr
-
+-   handle the following scenarios, which are not errors (i.e., your shell should not print an  
+     error message): 
+     • An empty command line. 
+     • Extra white spaces within a command line. 
+     • Batch file ends without quit command or user types 'Ctrl-D' as command in interactive mode.
 Usage
 -----
 
