@@ -1,7 +1,7 @@
 #include "shell.h"
 /**
  * execute_cd_command - executes the "cd" command to change directories.
- * @args: array of command arguments.
+ * @args: array of command arguments
  * @env: array of character
  * Description: This function handles the "cd" command, which is used to change
  * directories. If no argument is provided, an error message is printed

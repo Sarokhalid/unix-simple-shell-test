@@ -108,7 +108,7 @@ void handle_child_process(char *args[], char *argv[],
 		char *error_message, int length, char **env)
 {
 	/* Try to execute the command directly */
-	if (execve(args[0], args, env) == -1)
+	if (execvp(args[0], args) == -1)
 	{
 		execute_command_in_path(args, error_message, &length, env);
 		/* If we still can't execute the command, print an error message */
