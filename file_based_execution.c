@@ -14,14 +14,14 @@ void execute_commands_from_file(int argc, char *argv[],
 		shell_data data, char **env)
 {
 	int i;
-	int fd;
+	FILE *fd;
 
 	data.head = NULL;
 	for (i = 1; i < argc; i++)
 	{
 		/* Open the command file */
-		fd = open(argv[i], O_RDONLY);
-		if (fd == -1)
+		fd = fopen(argv[i], "r");
+		if (fd == NULL)
 		{
 			perror("Failed to open command file");
 			exit(EXIT_FAILURE);
@@ -29,7 +29,7 @@ void execute_commands_from_file(int argc, char *argv[],
 
 		read_and_execute_commands(fd, argv, data, env);
 		/* Close the command file */
-		if (close(fd) == -1)
+		if (fclose(fd) != 0)
 		{
 			perror("Failed to close command file");
 		}
@@ -48,35 +48,30 @@ void execute_commands_from_file(int argc, char *argv[],
  *
  * Return: void
  */
-void read_and_execute_commands(int fd, char *argv[],
+void read_and_execute_commands(FILE * fd, char *argv[],
 		shell_data data, char **env)
 {
-	ssize_t nread;
+	
 	char cmd[MAX_CMD_LEN];
-	int index = 0;
 
 	/* Read commands from the file */
-	while ((nread = read(fd, &cmd[index], 1)) > 0) /* Read one byte at a time */
+	while (fgets(cmd, MAX_CMD_LEN, fd) != NULL)
 	{
-		if (cmd[index] == '\n' || index == MAX_CMD_LEN - 1)
+		size_t len = strlen(cmd);
+		if (len > 0 && cmd[len - 1] == '\n')
 		{
-			cmd[index] = '\0'; /* Null-terminate the string */
-			handle_comments(cmd);
-			if (strlen(cmd) == 0) /* Add a check for NULL command */
-			{
-				continue; /* If NULL command, then continue to next iteration */
-			}
-			if (strncmp(cmd, "exit", 4) == 0 || strncmp(cmd, "quit", 4) == 0)
-			{
-				break;
-			}
-			handle_semicolon(cmd, argv, &data, env);
-			index = 0; /* Reset index for next command */
+		    cmd[len -1] = '\0';
 		}
-		else
+		handle_comments(cmd);
+		if (strlen(cmd) == 0)
 		{
-			index++; /* Move to next character in cmd */
+		    continue;
 		}
+		if (strncmp(cmd, "exit", 4) == 0 || strncmp(cmd, "quit", 4) == 0)
+		{
+		    break;
+		}
+		handle_semicolon(cmd, argv, &data, env);
 	}
 }
 

@@ -1,4 +1,0 @@
-ls;
-ls -l;
-echo hi; ls
-quit;

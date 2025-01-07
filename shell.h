@@ -86,7 +86,7 @@ void print_error_message(char *argv[], char *args[],
 
 /* Command reading functions */
 void read_command(char **cmd, size_t *len);
-void read_and_execute_commands(int fd, char *argv[],
+void read_and_execute_commands(FILE *fd, char *argv[],
 		shell_data data, char **env);
 
 /* Command parsing functions */
